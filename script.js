@@ -1,36 +1,40 @@
-const jokeEl = document.getElementById('joke')
-const jokeBtn = document.getElementById('jokeBtn')
+const body = document.body
+const slides = document.querySelectorAll('.slide')
+const leftBtn = document.getElementById('left')
+const rightBtn = document.getElementById('right')
 
-jokeBtn.addEventListener('click', generateJoke)
+let activeSlide = 0
 
-generateJoke()
+rightBtn.addEventListener('click', () => {
+  activeSlide++
 
-// USING ASYNC/AWAIT
-async function generateJoke() {
-  const config = {
-    headers: {
-      Accept: 'application/json',
-    },
+  if (activeSlide > slides.length - 1) {
+    activeSlide = 0
   }
 
-  const res = await fetch('https://icanhazdadjoke.com', config)
+  setBgToBody()
+  setActiveSlide()
+})
 
-  const data = await res.json()
+leftBtn.addEventListener('click', () => {
+  activeSlide--
 
-  jokeEl.innerHTML = data.joke
+  if (activeSlide < 0) {
+    activeSlide = slides.length - 1
+  }
+
+  setBgToBody()
+  setActiveSlide()
+})
+
+setBgToBody()
+
+function setBgToBody() {
+  body.style.backgroundImage = slides[activeSlide].style.backgroundImage
 }
 
-// USING .then()
-// function generateJoke() {
-//   const config = {
-//     headers: {
-//       Accept: 'application/json',
-//     },
-//   }
+function setActiveSlide() {
+  slides.forEach((slide) => slide.classList.remove('active'))
 
-//   fetch('https://icanhazdadjoke.com', config)
-//     .then((res) => res.json())
-//     .then((data) => {
-//       jokeEl.innerHTML = data.joke
-//     })
-// }
+  slides[activeSlide].classList.add('active')
+}
